@@ -1,17 +1,21 @@
 # Private source documents and generated text
-document/
+document/*
+!document/.gitkeep
 document_index.md
 
 # Local DocMemory database and config
-.docmemory/
+.docmemory/*
+!.docmemory/.gitkeep
 
 # Logs and run reports
-Logs/
+Logs/*
+!Logs/.gitkeep
 *.log
 *_failures.tsv
 *_report.tsv
 
 # Password outputs and local-only generated files
+Config/pass.txt
 password_backup/
 *_password_backup/
 unlocked/

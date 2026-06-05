@@ -38,7 +38,7 @@ installation_status.bat
 
 - `0_run_text_vector.bat` converts Office files, syncs vectors, and refreshes `document_index.md`.
 - `drop_office_to_text.bat` converts Office files to `.txt`.
-- `drop_remove_passwords.bat` removes Office/PDF open-password protection only when local passwords are listed in `Config/pass.txt`.
+- `drop_remove_passwords.bat` removes Office/PDF open-password protection only when local passwords are listed in local `Config/pass.txt`.
 - `drop_text_to_vector_dml.bat` builds the vector index using DirectML, which can use the PC's iGPU/GPU to speed up embedding. It is not Vulkan.
 - `generate_document_index.bat` refreshes the human-readable document map.
 - `installation_status.bat` checks tools, folders, skill handoff files, MCP notes, and the DocMemory index.
@@ -52,9 +52,11 @@ For factual answers, cite the generated source `.txt` files under `document`.
 
 ## Password Privacy
 
-`Config/pass.txt` is committed as a fake/empty placeholder.
+`Config/pass.example.txt` is committed as the safe template.
 
-Do not put real passwords in Git. Add real passwords only on the local PC when needed. If `Config/pass.txt` has no passwords, password removal is skipped.
+Do not put real passwords in Git. If password removal is needed, copy it to `Config/pass.txt` on the local PC and add real passwords there. `Config/pass.txt` is ignored by Git.
+
+If `Config/pass.txt` is missing or has no passwords, password removal is skipped.
 
 ## More Detail
 

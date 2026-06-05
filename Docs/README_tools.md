@@ -85,7 +85,7 @@ drop_office_to_text.bat -> drop_text_to_vector_dml.bat -> generate_document_inde
 
 Use `drop_text_to_vector_dml.bat` for the recommended DirectML GPU/iGPU vector path. If that fails on a PC, use `drop_text_to_vector.bat` as the CPU fallback.
 
-`0_run_text_vector.bat` does not remove passwords. If Office files are password protected, run `drop_remove_passwords.bat` first. It reads password candidates only from `Config\pass.txt`. If that file has no passwords, password removal is skipped. Skip it for normal files.
+`0_run_text_vector.bat` does not remove passwords. If Office files are password protected, run `drop_remove_passwords.bat` first. It reads password candidates only from local `Config\pass.txt`. If that file is missing or has no passwords, password removal is skipped. Skip it for normal files.
 
 When a specification or design document is updated:
 
@@ -215,14 +215,14 @@ For password-protected files:
 drop_remove_passwords.bat -> 0_run_text_vector.bat
 ```
 
-Password candidates are configured in:
+Password candidates are configured locally in:
 
 ```text
 Config\pass.txt
 ```
 
 Use one password per line. Blank lines and `#` comments are ignored.
-The committed `Config\pass.txt` is intentionally fake/empty for privacy. Add real passwords only on the local PC when needed.
+The committed `Config\pass.example.txt` is only a safe template. Copy it to `Config\pass.txt` on the local PC when needed. Real `Config\pass.txt` is ignored by Git.
 
 If files are not password protected, skip the password step.
 
