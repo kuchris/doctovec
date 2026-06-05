@@ -1,0 +1,30 @@
+[project]
+name = "docmemory"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+vector = [
+    "fastembed>=0.7.0",
+]
+directml = [
+    "fastembed>=0.7.0",
+    "onnxruntime-directml>=1.20.0",
+]
+mcp = [
+    "fastembed>=0.7.0",
+    "mcp>=1.0.0",
+]
+
+[project.scripts]
+docmemory = "docmemory.cli:main"
+docmemory-dml = "docmemory.cli_directml:main"
+docmemory-mcp = "docmemory.mcp_server:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

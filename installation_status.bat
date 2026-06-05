@@ -1,0 +1,153 @@
+@echo off
+setlocal EnableDelayedExpansion
+title doctovec Installation Status
+
+set "DOC_DIR=%~dp0"
+if "%DOC_DIR:~-1%"=="\" set "DOC_DIR=%DOC_DIR:~0,-1%"
+set "MISSING=0"
+set "WARNINGS=0"
+set "HAS_UV=0"
+set "INTERACTIVE=1"
+set "OK=[OK]"
+set "WARN=[WARN]"
+set "MISS=[MISSING]"
+set "INFO=[INFO]"
+
+if /i "%~1"=="--cli" set "INTERACTIVE=0"
+if /i "%~1"=="--no-pause" set "INTERACTIVE=0"
+if /i "%~1"=="/cli" set "INTERACTIVE=0"
+
+for /f "delims=" %%E in ('powershell -NoProfile -Command "[char]27" 2^>nul') do set "ESC=%%E"
+if defined ESC (
+  set "OK=%ESC%[92m[OK]%ESC%[0m"
+  set "WARN=%ESC%[93m[WARN]%ESC%[0m"
+  set "MISS=%ESC%[91m[MISSING]%ESC%[0m"
+  set "INFO=%ESC%[96m[INFO]%ESC%[0m"
+)
+
+echo doctovec installation status
+echo Target:
+echo   %DOC_DIR%
+echo.
+
+echo == Required tools ==
+where uv >nul 2>nul
+if errorlevel 1 (
+  echo !MISS! uv was not found in PATH.
+  echo           Install with: winget install astral-sh.uv
+  set /a MISSING+=1
+) else (
+  set "HAS_UV=1"
+  for /f "delims=" %%V in ('uv --version 2^>nul') do echo !OK! uv: %%V
+)
+
+where soffice >nul 2>nul
+if errorlevel 1 (
+  if exist "C:\Program Files\LibreOffice\program\soffice.exe" (
+    echo !OK! LibreOffice: C:\Program Files\LibreOffice\program\soffice.exe
+  ) else (
+    echo !MISS! LibreOffice soffice.exe was not found.
+    echo           Install with: winget install TheDocumentFoundation.LibreOffice
+    set /a MISSING+=1
+  )
+) else (
+  set "SOFFICE_PATH="
+  for /f "delims=" %%S in ('where soffice 2^>nul') do if not defined SOFFICE_PATH set "SOFFICE_PATH=%%S"
+  echo !OK! LibreOffice: !SOFFICE_PATH!
+)
+
+echo.
+echo == doctovec files ==
+for %%I in (
+  "document|Source document folder"
+  "docmemory_tool|Bundled DocMemory tool"
+  "Scripts|Python scripts folder"
+  "Docs|Documentation folder"
+  "Config|Config folder"
+  "skills\md-search|Repo-local md-search skill"
+  "mcp|MCP handoff folder"
+) do for /f "tokens=1,2 delims=|" %%A in ("%%~I") do (
+  if exist "%DOC_DIR%\%%A\" (
+    echo !OK! %%B: %%A
+  ) else (
+    echo !MISS! %%B: %%A
+    set /a MISSING+=1
+  )
+)
+
+for %%I in (
+  "0_run_text_vector.bat|Main workflow BAT"
+  "drop_office_to_text.bat|Office-to-text BAT"
+  "drop_text_to_vector_dml.bat|DirectML vector BAT"
+  "generate_document_index.bat|Document-index BAT"
+  "Scripts\office_drop_to_text.py|Office-to-text script"
+  "Scripts\generate_document_index.py|Document-index script"
+  "Scripts\remove_passwords.py|Password-removal script"
+  "Config\pass.txt|Password config"
+  "skills\md-search\SKILL.md|Repo-local skill"
+  "mcp\codex_mcp_example.toml|MCP config example"
+  "document_index.md|Document routing map"
+) do for /f "tokens=1,2 delims=|" %%A in ("%%~I") do (
+  if exist "%DOC_DIR%\%%A" (
+    echo !OK! %%B: %%A
+  ) else (
+    echo !MISS! %%B: %%A
+    set /a MISSING+=1
+  )
+)
+
+echo.
+echo == Optional Codex skill ==
+if exist "%USERPROFILE%\.codex\skills\md-search\SKILL.md" (
+  echo !OK! Installed skill: %USERPROFILE%\.codex\skills\md-search\SKILL.md
+) else (
+  echo !INFO! Installed skill not found:
+  echo        %USERPROFILE%\.codex\skills\md-search\SKILL.md
+  echo        Optional handoff copy exists at: skills\md-search\SKILL.md
+)
+
+echo.
+echo == DocMemory index ==
+if exist "%DOC_DIR%\.docmemory\docmemory.sqlite" (
+  echo !OK! SQLite index: .docmemory\docmemory.sqlite
+) else (
+  echo !WARN! SQLite index not found. Run 0_run_text_vector.bat after documents are ready.
+  set /a WARNINGS+=1
+)
+
+if exist "%DOC_DIR%\.docmemory\config.json" (
+  echo !OK! Index config: .docmemory\config.json
+) else (
+  echo !WARN! Index config not found. Run 0_run_text_vector.bat after documents are ready.
+  set /a WARNINGS+=1
+)
+
+if "%HAS_UV%"=="1" if exist "%DOC_DIR%\docmemory_tool\pyproject.toml" (
+  echo.
+  echo == DocMemory status ==
+  pushd "%DOC_DIR%" >nul
+  uv run --directory "%DOC_DIR%\docmemory_tool" docmemory status "%DOC_DIR%"
+  if errorlevel 1 (
+    echo !WARN! DocMemory status command failed.
+    set /a WARNINGS+=1
+  )
+  popd >nul
+)
+
+echo.
+echo == Summary ==
+if "%MISSING%"=="0" (
+  echo Required setup: !OK!
+) else (
+  echo Required setup: %MISSING% missing item(s)
+)
+
+if "%WARNINGS%"=="0" (
+echo Warnings: !OK! none
+) else (
+  echo Warnings: %WARNINGS%
+)
+
+echo.
+if "%INTERACTIVE%"=="1" pause
+exit /b %MISSING%

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">doctovec 概念図</title>
+  <desc id="desc">Office文書をテキスト化し、DocMemoryで検索用インデックスを作成し、document_index、skill、MCPで検索する流れを示す概念図。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#334155"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.14"/>
+    </filter>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 32px "Yu Gothic", Meiryo, Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 16px "Yu Gothic", Meiryo, Arial, sans-serif; fill: #475569; }
+      .node-title { font: 700 19px "Yu Gothic", Meiryo, Arial, sans-serif; fill: #0f172a; }
+      .node-text { font: 14px "Yu Gothic", Meiryo, Arial, sans-serif; fill: #475569; }
+      .small { font: 12px "Yu Gothic", Meiryo, Arial, sans-serif; fill: #64748b; }
+      .box { stroke-width: 2; rx: 14; filter: url(#shadow); }
+      .arrow { fill: none; stroke: #334155; stroke-width: 2.4; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #64748b; stroke-width: 2.2; stroke-dasharray: 8 7; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1200" height="680"/>
+  <text class="title" x="60" y="66">doctovec 文書検索ワークフロー</text>
+  <text class="subtitle" x="60" y="96">Office文書をテキスト化し、ベクトル検索用インデックスを作成し、根拠は元の .txt から引用します。</text>
+
+  <rect class="box" x="70" y="170" width="210" height="112" fill="#e0f2fe" stroke="#0284c7"/>
+  <text class="node-title" x="96" y="213">Office文書</text>
+  <text class="node-text" x="96" y="240">Word / Excel / PPT</text>
+  <text class="small" x="96" y="263">doctovec/document</text>
+
+  <rect class="box" x="400" y="160" width="220" height="132" fill="#dcfce7" stroke="#16a34a"/>
+  <text class="node-title" x="430" y="210">テキスト変換</text>
+  <text class="node-text" x="430" y="238">drop_office_to_text.bat</text>
+  <text class="small" x="430" y="262">Scripts/office_drop_to_text.py</text>
+
+  <rect class="box" x="760" y="170" width="240" height="112" fill="#fef3c7" stroke="#d97706"/>
+  <text class="node-title" x="792" y="213">生成テキスト</text>
+  <text class="node-text" x="792" y="240">UTF-8 .txt ファイル</text>
+  <text class="small" x="792" y="263">document/**/text/**/txt</text>
+
+  <path class="arrow" d="M280 226 C330 226 350 226 400 226"/>
+  <path class="arrow" d="M620 226 C675 226 705 226 760 226"/>
+
+  <rect class="box" x="170" y="415" width="250" height="122" fill="#ede9fe" stroke="#7c3aed"/>
+  <text class="node-title" x="202" y="462">文書マップ</text>
+  <text class="node-text" x="202" y="490">document_index.md</text>
+  <text class="small" x="202" y="514">経路案内用。根拠本文ではない</text>
+
+  <rect class="box" x="520" y="405" width="250" height="142" fill="#fee2e2" stroke="#dc2626"/>
+  <text class="node-title" x="552" y="456">DocMemory</text>
+  <text class="node-text" x="552" y="484">SQLite + ベクトル</text>
+  <text class="small" x="552" y="508">.docmemory/docmemory.sqlite</text>
+  <text class="small" x="552" y="530">drop_text_to_vector_dml.bat</text>
+
+  <rect class="box" x="880" y="405" width="230" height="142" fill="#ccfbf1" stroke="#0f766e"/>
+  <text class="node-title" x="910" y="456">LLM検索</text>
+  <text class="node-text" x="910" y="484">md-search skill / MCP</text>
+  <text class="small" x="910" y="508">検索してから .txt を引用</text>
+
+  <path class="arrow" d="M820 282 C765 344 723 370 680 405"/>
+  <path class="arrow" d="M800 282 C650 332 470 365 350 415"/>
+  <path class="arrow" d="M420 476 C465 476 475 476 520 476"/>
+  <path class="arrow" d="M770 476 C810 476 840 476 880 476"/>
+
+  <rect x="60" y="585" width="1080" height="46" rx="10" fill="#ffffff" stroke="#cbd5e1"/>
+  <text class="node-text" x="86" y="614">ルール: document_index.md は探すための地図。回答の根拠は source .txt から取る。</text>
+
+  <path class="dash" d="M995 405 C1035 335 1045 255 1005 210"/>
+  <text class="small" x="1016" y="326">任意の設定メモ</text>
+</svg>

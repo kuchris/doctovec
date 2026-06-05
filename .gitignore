@@ -1,0 +1,33 @@
+# Private source documents and generated text
+document/
+document_index.md
+
+# Local DocMemory database and config
+.docmemory/
+
+# Logs and run reports
+Logs/
+*.log
+*_failures.tsv
+*_report.tsv
+
+# Password outputs and local-only generated files
+password_backup/
+*_password_backup/
+unlocked/
+*_unlocked/
+
+# Local model/package/cache data
+docmemory_tool/.models/
+docmemory_tool/.venv/
+docmemory_tool/.ruff_cache/
+docmemory_tool/.pytest_cache/
+docmemory_tool/src/*.egg-info/
+
+# Python/cache output
+__pycache__/
+Scripts/__pycache__/
+*.pyc
+
+# Machine-specific MCP snippets
+mcp/codex_mcp_local.toml

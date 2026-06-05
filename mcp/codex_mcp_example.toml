@@ -1,0 +1,6 @@
+[mcp_servers.docmemory]
+command = 'uv'
+args = ['run', '--directory', '<absolute-path-to-doctovec>\docmemory_tool', '--extra', 'mcp', 'docmemory-mcp']
+
+[mcp_servers.docmemory.env]
+DOCMEMORY_TARGET = '<absolute-path-to-doctovec>'

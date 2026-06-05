@@ -1,0 +1,4 @@
+interface:
+  display_name: "Markdown Doc Search"
+  short_description: "Search generated Markdown docs with DocMemory first."
+  default_prompt: "Search the generated Markdown documentation using DocMemory when available, cite file paths, and ignore history unless asked to compare versions."

@@ -1,0 +1,6 @@
+# Passwords tried by Scripts\remove_passwords.py.
+# One password per line.
+# Blank lines and # comments are ignored.
+#
+# This committed file is intentionally fake/empty for privacy.
+# Add real passwords only on the local PC when needed.
