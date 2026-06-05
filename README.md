@@ -46,9 +46,23 @@ installation_status.bat
 
 ## Important Rule
 
-Use `document_index.md` as a routing map only.
+`document_index.md` is a map for finding which document to inspect.
 
-For factual answers, cite the generated source `.txt` files under `document`.
+For fact checks and answers, cite the generated source `.txt` files under `document`.
+
+## What This Does
+
+This folder turns Office documents into a form that an LLM can search reliably.
+
+First, it converts Word / Excel / PowerPoint files into searchable `.txt` files. Office files are not ideal as the direct search target because LLM tools and command-line search cannot always read their contents consistently.
+
+Next, it registers the generated `.txt` files in the DocMemory database. The reason we make a database is to avoid sending every document to the LLM every time. When there are many documents, reading everything is slow, uses many tokens, and can mix in unrelated information.
+
+The DocMemory database stores document text and search vectors. This lets the workflow find only the documents or paragraphs close to the question before sending evidence to the LLM.
+
+`document_index.md` is the table of contents / map. Use it to find likely documents. Do not use it as the final evidence.
+
+The final evidence should always come from generated `.txt` files under `document`.
 
 ## Password Privacy
 
@@ -58,10 +72,12 @@ Do not put real passwords in Git. If password removal is needed, copy it to `Con
 
 If `Config/pass.txt` is missing or has no passwords, password removal is skipped.
 
-## More Detail
-
-See:
+Normal flow:
 
 ```text
-Docs\README_tools.md
+1. Put Office documents in document
+2. Run 0_run_text_vector.bat
+3. The LLM uses document_index.md to find candidates
+4. DocMemory searches related .txt files
+5. The answer cites the found .txt evidence
 ```
